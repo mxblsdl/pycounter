@@ -1,0 +1,19 @@
+{
+  "name": "Python Development Environment",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".",
+    "args": {
+      "PROJECT_NAME": "pycounter"
+    }
+  },
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "ms-python.python",
+          "ms-azuretools.vscode-docker"
+        ]
+      }
+    }
+  
+}
