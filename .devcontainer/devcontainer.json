@@ -4,16 +4,26 @@
     "dockerfile": "Dockerfile",
     "context": ".",
     "args": {
-      "PROJECT_NAME": "pycounter"
+      "PROJECT_NAME": "pycounter",
+      "POETRY_VERSION": "1.8.2"
     }
   },
-    "customizations": {
-      "vscode": {
-        "extensions": [
-          "ms-python.python",
-          "ms-azuretools.vscode-docker"
-        ]
+  "postCreateCommand": "bash ./.devcontainer/post-install.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-azuretools.vscode-docker",
+        "charliermarsh.ruff"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.pythonPath": "/usr/local/bin/python",
+        "[python]": {
+          "editor.formatOnSave": true,
+          "editor.defaultFormatter": "charliermarsh.ruff"
+        }
       }
     }
-  
+  }
 }
