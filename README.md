@@ -7,4 +7,4 @@ A simple tool to count the lines of code for a project. While other tools exists
 While the tool will give a summary of the number and types of files in project, it will only give detailed stats:
 
 - .py
-- .md (coming soon)
+- .md

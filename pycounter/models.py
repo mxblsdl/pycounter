@@ -26,11 +26,10 @@ class Stats:
 class Md_Stats(Stats):
     total_lines: int = 0
     blank_lines: int = 0
-    heading_one: int = 0
-    heading_two: int = 0
-    heading_three: int = 0
-    heading_four: int = 0
-
+    h_one_lines: int = 0
+    h_two_lines: int = 0
+    h_three_lines: int = 0
+    h_four_lines: int = 0
 
 
 @dataclass

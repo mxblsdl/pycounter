@@ -4,13 +4,18 @@ import typer
 
 
 def process_py_file(file_path: str, stats: Stats) -> None:
+    """Count different attributes in a python file
+
+    Args:
+        file_path (str): path to file
+        stats (Stats): Stats object to record attributes
+    """
     try:
         with open(file_path, "r") as file:
             stats.add("number_files")
             DOCSTRING_FLAG = False
 
             if Path(file_path).stat().st_size == 0:
-                # typer.echo(f"empty file {file.name}")
                 stats.add("empty_files")
 
             for line in file:
@@ -47,6 +52,12 @@ def process_py_file(file_path: str, stats: Stats) -> None:
 
 
 def process_md_file(file_path: str, stats: Stats) -> None:
+    """Count different attributes in a markdown file
+
+    Args:
+        file_path (str): Path to file
+        stats (Stats): Stats object to record attributes
+    """
     try:
         with open(file_path, "r") as file:
             stats.add("number_files")
@@ -61,10 +72,10 @@ def process_md_file(file_path: str, stats: Stats) -> None:
 
                 if line.startswith("#"):
                     switch = {
-                        1: "heading_one",
-                        2: "heading_two",
-                        3: "heading_three",
-                        4: "heading_four",
+                        1: "h_one_lines",
+                        2: "h_two_lines",
+                        3: "h_three_lines",
+                        4: "h_four_lines",
                     }
                     heading_type = switch.get(line.count("#"))
 

@@ -4,6 +4,12 @@ from pycounter.console import console
 
 
 def create_table(stats: dict, title: str, **kwargs) -> None:
+    """Create and print a rich table
+
+    Args:
+        stats (dict): dictionary of values to display
+        title (str): Title or table
+    """
     if console.is_dumb_terminal:
         measure_style = None
         value_style = None
