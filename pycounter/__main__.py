@@ -1,25 +1,17 @@
-import typer
-
-from typing_extensions import Annotated
-from pycounter.models import Md_Stats, Py_Stats
-from pycounter.table import create_table
-from pycounter.process import process_py_file, process_md_file
-from pycounter.console import console
-from pycounter.helpers import find_files, create_file_summary
-
-app = typer.Typer(
-    no_args_is_help=True,
-    epilog="Count the lines in your code base",
+from pycounter.classes import Md_Stats, Py_Stats
+from pycounter.model import (
+    create_file_summary,
+    find_files,
+    process_md_file,
+    process_py_file,
+    create_table,
+    console,
 )
 
 
-@app.command()
 def count(
-    path: Annotated[str, typer.Argument(help="Path to search")] = "./",
-    ext: Annotated[
-        str,
-        typer.Option("--ext", "-e", help="File extension to calculate stas for"),
-    ] = None,
+    path: str,
+    ext: str,
 ):
     if ext and ext[0] != ".":
         ext = "." + ext
@@ -30,7 +22,7 @@ def count(
         file_summary = create_file_summary(files)
 
         create_table(file_summary, title="File type summary")
-        raise typer.Exit(0)
+        raise exit(0)
 
     # Conditional check for file extension type
     if ext == ".py":
@@ -49,7 +41,7 @@ def count(
         stats.calc_files()
     else:
         console.print(f"Supplied file extension {ext} not currently supported")
-        raise typer.Exit(0)
+        raise exit(0)
 
     create_table(
         stats.dict("files"),
@@ -60,7 +52,3 @@ def count(
         stats.dict("lines"),
         title=f"Lines Stats for {ext} files",
     )
-
-
-if __name__ == "__main__":
-    count("../")
