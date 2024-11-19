@@ -8,6 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 rich = "^13.9.2"
+setuptools = "^75.5.0"
 
 [tool.poetry.scripts]
 count = "pycounter.cli:main"

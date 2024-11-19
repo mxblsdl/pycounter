@@ -44,7 +44,7 @@ def main(argv: str | None = None) -> int:
         "--ext",
         help="extension to filter for",
         action="store",
-        choices=[".py", ".md"],
+        choices=[".py", ".md", "py", "md"],
         type=str,
     )
 

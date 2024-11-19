@@ -50,7 +50,7 @@ def find_files(path: str, ext: str | None) -> list[str]:
     """
     files = Path(path).rglob("*")
     # Filter for files and ignore any .git files or folders
-    files = [f for f in files if f.is_file() and ".git" not in f.parts]
+    files = [f for f in files if f.is_file() and not f.parts[0].startswith(".")]
     if ext:
         return [f for f in files if ext == f.suffix]
     return files
