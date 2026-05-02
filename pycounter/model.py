@@ -38,7 +38,7 @@ def create_table(stats: dict, title: str, **kwargs) -> None:
     console.line(1)
 
 
-def find_files(path: str, ext: str | None) -> list[str]:
+def find_files(path: str, ext: str | None) -> list[Path]:
     """Find files based on extension. Automatically filters out .git folders and files
 
     Args:
@@ -46,14 +46,14 @@ def find_files(path: str, ext: str | None) -> list[str]:
         ext (str | None): File extension to search for
 
     Returns:
-        list[str]: list of file paths as strings
+        list[Path]: list of file paths as Path objects
     """
     files = Path(path).rglob("*")
-    # Filter for files and ignore any .git files or folders
-    files = [f for f in files if f.is_file() and not f.parts[0].startswith(".")]
+    # Filter for files and ignore any .hidden files or folders
+    files_filtered = [f for f in files if f.is_file() and not f.match("**/.*")]
     if ext:
-        return [f for f in files if ext == f.suffix]
-    return files
+        return [f for f in files_filtered if ext == f.suffix]
+    return files_filtered
 
 
 def create_file_summary(files: list[Path]) -> dict:
@@ -66,7 +66,7 @@ def create_file_summary(files: list[Path]) -> dict:
         dict: Dictionary with keys for file type and values of counts
     """
 
-    files_hash = dict()
+    files_hash: dict[str, int] = dict()
     for file in files:
         if not isinstance(file, Path):
             continue
@@ -83,11 +83,11 @@ def create_file_summary(files: list[Path]) -> dict:
     return {k: str(v) for k, v in files_hash.items()}
 
 
-def process_py_file(file_path: str, stats: Stats) -> None:
+def process_py_file(file_path: str | Path, stats: Stats) -> None:
     """Count different attributes in a python file
 
     Args:
-        file_path (str): path to file
+        file_path (str | Path): path to file
         stats (Stats): Stats object to record attributes
     """
     try:
@@ -128,15 +128,14 @@ def process_py_file(file_path: str, stats: Stats) -> None:
                 stats.total_lines += 1
 
     except FileNotFoundError as e:
-        console.print(f"File {file_path} not found")
-        console.print_exception(e, word_wrap=True)
+        console.print(f"File {file_path} not found: {e}")
 
 
-def process_md_file(file_path: str, stats: Stats) -> None:
+def process_md_file(file_path: str | Path, stats: Stats) -> None:
     """Count different attributes in a markdown file
 
     Args:
-        file_path (str): Path to file
+        file_path (str | Path): Path to file
         stats (Stats): Stats object to record attributes
     """
     try:
@@ -159,11 +158,10 @@ def process_md_file(file_path: str, stats: Stats) -> None:
                         4: "h_four_lines",
                     }
                     heading_type = switch.get(line.count("#"))
-
-                    stats.add(heading_type)
+                    if heading_type:
+                        stats.add(heading_type)
 
                 stats.total_lines += 1
 
     except FileNotFoundError as e:
-        console.print(f"File {file_path} not found")
-        console.print_exception(e, word_wrap=True)
+        console.print(f"File {file_path} not found: {e}")

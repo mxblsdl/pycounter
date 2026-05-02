@@ -1,9 +1,9 @@
 import argparse
-import pkg_resources
+from importlib.metadata import version
 from pycounter.__main__ import count
 
 
-def main(argv: str | None = None) -> int:
+def main(argv: str | None = None):
     """
     Tool for summarizing
 
@@ -36,7 +36,7 @@ def main(argv: str | None = None) -> int:
         "-v",
         "--version",
         action="version",
-        version=f"{pkg_resources.get_distribution('pycounter').version}",
+        version=f"{version('pycounter')}",
     )
 
     parser.add_argument(

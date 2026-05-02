@@ -25,6 +25,8 @@ def count(
         raise exit(0)
 
     # Conditional check for file extension type
+    stats: Py_Stats | Md_Stats
+
     if ext == ".py":
         stats = Py_Stats()
 

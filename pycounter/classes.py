@@ -6,6 +6,7 @@ class Stats:
     number_files: int = 0
     empty_files: int = 0
     net_files: int = 0
+    total_lines: int = 0
 
     def add(self, var: str, value: int = 1):
         if hasattr(self, var):
