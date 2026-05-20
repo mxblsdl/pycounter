@@ -1,4 +1,3 @@
-from pycounter.classes import Stats
 from pathlib import Path
 from rich.table import Table
 from rich import box
@@ -38,11 +37,11 @@ def create_table(stats: dict, title: str, **kwargs) -> None:
     console.line(1)
 
 
-def find_files(path: str, ext: str | None) -> list[Path]:
+def find_files(path: str | Path, ext: str | None) -> list[Path]:
     """Find files based on extension. Automatically filters out .git folders and files
 
     Args:
-        path (str): Path to search in
+        path (str | Path): Path to search in
         ext (str | None): File extension to search for
 
     Returns:
@@ -50,7 +49,12 @@ def find_files(path: str, ext: str | None) -> list[Path]:
     """
     files = Path(path).rglob("*")
     # Filter for files and ignore any .hidden files or folders
-    files_filtered = [f for f in files if f.is_file() and not f.match("**/.*")]
+    files_filtered = [
+        f
+        for f in files
+        if f.is_file() and not any(part.startswith(".") for part in f.parts)
+    ]
+
     if ext:
         return [f for f in files_filtered if ext == f.suffix]
     return files_filtered
@@ -81,87 +85,3 @@ def create_file_summary(files: list[Path]) -> dict:
         sorted(files_hash.items(), key=lambda item: item[1], reverse=True)
     )
     return {k: str(v) for k, v in files_hash.items()}
-
-
-def process_py_file(file_path: str | Path, stats: Stats) -> None:
-    """Count different attributes in a python file
-
-    Args:
-        file_path (str | Path): path to file
-        stats (Stats): Stats object to record attributes
-    """
-    try:
-        with open(file_path, "r") as file:
-            stats.add("number_files")
-            DOCSTRING_FLAG = False
-
-            if Path(file_path).stat().st_size == 0:
-                stats.add("empty_files")
-
-            for line in file:
-                if line.strip() == "" and not DOCSTRING_FLAG:
-                    stats.add("blank_lines")
-                    continue
-
-                if '"""' in line.split():
-                    if line.split()[0] == '"""':
-                        stats.add("docstring_lines")
-                        DOCSTRING_FLAG = not DOCSTRING_FLAG
-                        continue
-
-                if DOCSTRING_FLAG:
-                    stats.add("docstring_lines")
-                    continue
-
-                if line.startswith("import"):
-                    stats.add("import_lines")
-                    continue
-
-                if line.startswith("from") and "import" in line.split():
-                    stats.add("import_lines")
-                    continue
-
-                if line.strip()[0] == "#":
-                    stats.add("comment_lines")
-                    continue
-
-                stats.total_lines += 1
-
-    except FileNotFoundError as e:
-        console.print(f"File {file_path} not found: {e}")
-
-
-def process_md_file(file_path: str | Path, stats: Stats) -> None:
-    """Count different attributes in a markdown file
-
-    Args:
-        file_path (str | Path): Path to file
-        stats (Stats): Stats object to record attributes
-    """
-    try:
-        with open(file_path, "r") as file:
-            stats.add("number_files")
-
-            if Path(file_path).stat().st_size == 0:
-                stats.add("empty_files")
-
-            for line in file:
-                if line.strip() == "":
-                    stats.add("blank_lines")
-                    continue
-
-                if line.startswith("#"):
-                    switch = {
-                        1: "h_one_lines",
-                        2: "h_two_lines",
-                        3: "h_three_lines",
-                        4: "h_four_lines",
-                    }
-                    heading_type = switch.get(line.count("#"))
-                    if heading_type:
-                        stats.add(heading_type)
-
-                stats.total_lines += 1
-
-    except FileNotFoundError as e:
-        console.print(f"File {file_path} not found: {e}")

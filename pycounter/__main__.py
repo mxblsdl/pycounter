@@ -2,8 +2,6 @@ from pycounter.classes import Md_Stats, Py_Stats
 from pycounter.model import (
     create_file_summary,
     find_files,
-    process_md_file,
-    process_py_file,
     create_table,
     console,
 )
@@ -11,7 +9,7 @@ from pycounter.model import (
 
 def count(
     path: str,
-    ext: str,
+    ext: str | None = None,
 ):
     if ext and ext[0] != ".":
         ext = "." + ext
@@ -31,7 +29,7 @@ def count(
         stats = Py_Stats()
 
         for file in files:
-            process_py_file(file, stats)
+            stats.process_py_file(file)
         stats.calc_lines()
         stats.calc_files()
 
@@ -39,7 +37,7 @@ def count(
         stats = Md_Stats()
 
         for file in files:
-            process_md_file(file, stats)
+            stats.process_md_file(file)
         stats.calc_files()
     else:
         console.print(f"Supplied file extension {ext} not currently supported")
