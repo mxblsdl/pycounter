@@ -2,20 +2,31 @@
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.pyrefly]
+project-includes = [
+    "**/*.py*",
+    "**/*.ipynb",
+]
+
 [project]
 name = "pycounter"
 version = "0.2.0"
 description = ""
 readme = "README.md"
+requires-python = ">=3.14"
 authors = [
     { name = "mxblsdl", email = "maxblasdel@gmail.com" }
 ]
 dependencies = [
     "rich>=13.9.2",
     "setuptools>=75.5.0",
+    "textual>=8.2.5",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=7.0",
 ]
 
 [project.scripts]
 count = "pycounter.cli:main"
-
-# Optional uv-specific configuration
