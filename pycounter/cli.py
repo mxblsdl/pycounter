@@ -1,6 +1,7 @@
 import argparse
 from importlib.metadata import version
 from pycounter.__main__ import count
+from argparse import Namespace
 
 
 def main(argv: str | None = None):
@@ -48,9 +49,21 @@ def main(argv: str | None = None):
         type=str,
     )
 
-    args = parser.parse_args(argv)
+    parser.add_argument(
+        "--tui",
+        help="Launch interactive TUI",
+        action="store_true",
+    )
 
-    count(args.path, args.ext)
+    args: Namespace = parser.parse_args(argv)
+
+    if args.tui:
+        from pycounter.tui import CounterApp
+
+        app = CounterApp()
+        app.run()
+    else:
+        count(args.path, args.ext)
 
 
 if __name__ == "__main__":
